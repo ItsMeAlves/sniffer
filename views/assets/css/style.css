@@ -1,0 +1,15 @@
+body, html {
+    height: 100%;
+    width: 100%;
+    background-color: #2D2D38;
+}
+
+nav {
+    background-color: #FF1A56;
+}
+
+.card {
+    width: 29%;
+    margin: 0.5em 2%;
+    display: inline-block;
+}

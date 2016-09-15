@@ -59,6 +59,9 @@ module.exports = {
     start(device, filter) {
         return cap.open(device, filter, bufferSize, buffer); //linktype
     },
+    stop() {
+        cap.close();
+    },
     subscribe(listener) {
         listeners.push(listener);
     }

@@ -7,11 +7,14 @@ routes(app);
 
 messenger.on("connection", (socket) => {
     socket.on("start", (data) => {
-        console.log("starting....");
+        var device = "wlan0";
+        var filter = "";
+        sniffer.start(device, filter);
     })
 
     socket.on("stop", (data) => {
-        console.log("stopping");
+        // sniffer.stop();
+        console.log("stop");
     });
 
     sniffer.subscribe((packet) => {

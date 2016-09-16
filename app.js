@@ -3,25 +3,11 @@ var routes = require("./config/routes");
 var http = require("./config/express").http;
 var messenger = require("socket.io")(http);
 var sniffer = require("./jobs/sniffer");
+var stringHelper = require("./config/string");
+var messengerManager = require("./jobs/messengerManager");
+
 routes(app);
-
-messenger.on("connection", (socket) => {
-    socket.on("start", (data) => {
-        var device = "wlan0";
-        var filter = "";
-        sniffer.start(device, filter);
-    })
-
-    socket.on("stop", (data) => {
-        // sniffer.stop();
-        console.log("stop");
-    });
-
-    sniffer.subscribe((packet) => {
-        socket.emit("packet", packet);
-    });
-});
-
+messengerManager(messenger, sniffer);
 
 http.listen(app.get("PORT"), () => {
     console.log("listening on", app.get("PORT"));

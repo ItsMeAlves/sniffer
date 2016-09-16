@@ -1,10 +1,15 @@
 var root = new Vue({
     el: "#app",
     data: {
-        packets: [1,2,3],
+        packets: [],
+        device: "wlan0",
+        filter: "",
         actionButton: "Start!"
     },
     methods: {
+        clean() {
+            this.packets = [];
+        },
         action() {
             if(this.actionButton.match("Start")) {
                 socket.emit("start", {});
@@ -19,5 +24,5 @@ var root = new Vue({
 });
 
 socket.on("packet", (data) => {
-    root.packets = [10, ...root.packets];
+    root.packets = [data, ...root.packets];
 });

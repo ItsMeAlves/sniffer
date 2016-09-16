@@ -1,11 +1,12 @@
 body, html {
     height: 100%;
     width: 100%;
-    background-color: #2D2D38;
+    background-color: #35383D;
 }
 
 nav {
     background-color: #FF1A56;
+    /*background-color: #3fe8d9;*/
 }
 
 .card {

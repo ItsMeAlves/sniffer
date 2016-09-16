@@ -17,6 +17,7 @@
                             <li class="active"><a href="#" v-on:click="action">
                                 {{actionButton}}</a></li>
                             <li><a href="#settingsModal" class="modal-trigger">Settings</a></li>
+                            <li><a href="#" v-on:click="clean">Clean</a></li>
                         </ul>
                     </div>
                 </nav>
@@ -24,24 +25,43 @@
                     <div class="modal-content">
                         <h4>Settings</h4>
                         <p>Define some stuff!</p>
+                        <div class="row center-align">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="device" v-model="device" type="text"/>
+                                        <label for="device">Device</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="filter" v-model="filter" type="text"/>
+                                        <label for="filter">Filter</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok!</a>
+                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn">Ok!</a>
                     </div>
                 </div>
             </div>
 
             <div class="packets">
+                <div class="row" v-if="!packets.length">
+                    <img class="col s8 offset-s2" src="img/wumpus.png"/>
+                </div>
                 <div class="card small" v-for="packet in packets">
                     <div class="card-image waves-effect waves-block waves-light">
                       <img class="activator" src="img/kid.jpg"/>
                     </div>
                     <div class="card-content">
-                      <span class="card-title activator grey-text text-darken-4">{{packet}}<i class="material-icons right">more_vert</i></span>
-                      <p>{{packet}}</p>
+                      <span class="card-title activator grey-text text-darken-4">Packet<i class="material-icons right">more_vert</i></span>
+                      <!-- <p>{{packet}}</p> -->
                     </div>
                     <div class="card-reveal">
-                      <span class="card-title grey-text text-darken-4">{{packet}}<i class="material-icons right">close</i></span>
+                      <span class="card-title grey-text text-darken-4">Packet<i class="material-icons right">close</i></span>
                       <p>Here is some more information about this product that is only revealed once clicked on.</p>
                     </div>
                 </div>

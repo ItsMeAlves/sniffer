@@ -12,11 +12,14 @@ var root = new Vue({
         },
         action() {
             if(this.actionButton.match("Start")) {
-                socket.emit("start", {});
+                socket.emit("start", {
+                    device: this.device,
+                    filter: this.filter
+                });
                 this.actionButton = "Stop!";
             }
             else if(this.actionButton.match("Stop")) {
-                socket.emit("stop", {});
+                socket.emit("stop");
                 this.actionButton = "Start!";
             }
         }
@@ -24,5 +27,10 @@ var root = new Vue({
 });
 
 socket.on("packet", (data) => {
-    root.packets = [data, ...root.packets];
+    if(root.packets.length > 100) {
+        root.packets = [data, ...root.packets.slice(0, 99)];
+    }
+    else {
+        root.packets = [data, ...root.packets];
+    }
 });

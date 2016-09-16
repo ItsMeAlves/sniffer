@@ -13,11 +13,19 @@
                 <nav>
                     <div class="nav-wrapper container">
                         <a href="#" class="brand-logo center">Sniffer!</a>
-                        <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <ul id="nav-mobile" class="right">
                             <li class="active"><a href="#" v-on:click="action">
                                 {{actionButton}}</a></li>
                             <li><a href="#settingsModal" class="modal-trigger">Settings</a></li>
                             <li><a href="#" v-on:click="clean">Clean</a></li>
+                        </ul>
+                        <ul id="nav-mobile" class="left">
+                            <li v-if="packets.length">
+                                Displaying {{packets.length}} packets
+                            </li>
+                            <li v-if="!packets.length">
+                                No packets to display
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -50,19 +58,52 @@
 
             <div class="packets">
                 <div class="row" v-if="!packets.length">
+                    <br />
+                    <br />
                     <img class="col s8 offset-s2" src="img/wumpus.png"/>
                 </div>
-                <div class="card small" v-for="packet in packets">
+                <div class="card" v-for="packet in packets">
                     <div class="card-image waves-effect waves-block waves-light">
-                      <img class="activator" src="img/kid.jpg"/>
+                      <img class="activator" src="img/squirrel.jpg"/>
                     </div>
                     <div class="card-content">
                       <span class="card-title activator grey-text text-darken-4">Packet<i class="material-icons right">more_vert</i></span>
                       <!-- <p>{{packet}}</p> -->
                     </div>
-                    <div class="card-reveal">
-                      <span class="card-title grey-text text-darken-4">Packet<i class="material-icons right">close</i></span>
-                      <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                    <div class="card-reveal row">
+                        <span class="card-title grey-text text-darken-4">Packet<i class="material-icons right">close</i></span>
+                        <div class="col s12">
+                            <h5>Link layer: {{packet.linkLayer.name}}</h5>
+                            <ul>
+                                <li>
+                                    <strong>Source MAC addr:</strong> {{packet.linkLayer.srcMac}}
+                                </li>
+                                <li>
+                                    <strong>Destination MAC addr:</strong> {{packet.linkLayer.destMac}}
+                                </li>
+                                <li>
+                                    <strong>Type:</strong> {{packet.linkLayer.type.id}} ({{packet.linkLayer.type.name}})
+                                </li>
+                            </ul>
+                            <hr />
+                            <div v-if="packet.networkLayer.name == 'ARP'">
+                                <h5>ARP</h5>
+                            </div>
+                            <div v-if="packet.networkLayer.name == 'IPV4'">
+                                <h5>Network layer: {{packet.networkLayer.name}}</h5>
+                                <ul>
+                                    <li>
+                                        <strong>Source IP addr:</strong> {{packet.networkLayer.srcIp}}
+                                    </li>
+                                    <li>
+                                        <strong>Destination IP addr:</strong> {{packet.networkLayer.destIp}}
+                                    </li>
+                                    <li>
+                                        <strong>Protocol:</strong> {{packet.networkLayer.protocol.id}} ({{packet.networkLayer.protocol.name}})
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

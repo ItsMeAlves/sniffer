@@ -10,7 +10,8 @@ nav {
 }
 
 .card {
-    width: 27%;
-    margin: 0.5em 3%;
+    width: 29%;
+    margin: 0.5em 2%;
     display: inline-block;
+    max-width: 400px;
 }

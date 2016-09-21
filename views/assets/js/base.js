@@ -26,7 +26,13 @@ var root = new Vue({
     }
 });
 
+var imgs =  ["img/dog.gif", "img/dog2.jpg", "img/kid.jpg", "img/squirrel.jpg"];
+
 socket.on("packet", (data) => {
+    var index = Math.floor(Math.random() * imgs.length);
+
+    data.img = imgs[3];
+
     if(root.packets.length > 100) {
         root.packets = [data, ...root.packets.slice(0, 99)];
     }

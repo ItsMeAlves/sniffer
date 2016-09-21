@@ -88,6 +88,17 @@
                             <hr />
                             <div v-if="packet.networkLayer.name == 'ARP'">
                                 <h5>ARP</h5>
+                                <ul>
+                                    <li>
+                                        <strong>Operation code:</strong> {{packet.networkLayer.opcode.id}} ({{packet.networkLayer.opcode.type}})
+                                    </li>
+                                    <li v-if="packet.networkLayer.opcode.id == 1">
+                                        Who has {{packet.networkLayer.targetProtocolAddress}}? Tell {{packet.networkLayer.senderProtocolAddress}}
+                                    </li>
+                                    <li v-if="packet.networkLayer.opcode.id == 2">
+                                        {{packet.networkLayer.senderProtocolAddress}} is at {{packet.networkLayer.senderHardwareAddress}}
+                                    </li>
+                                </ul>
                             </div>
                             <div v-if="packet.networkLayer.name == 'IPV4'">
                                 <h5>Network layer: {{packet.networkLayer.name}}</h5>
@@ -100,6 +111,20 @@
                                     </li>
                                     <li>
                                         <strong>Protocol:</strong> {{packet.networkLayer.protocol.id}} ({{packet.networkLayer.protocol.name}})
+                                    </li>
+                                </ul>
+                            </div>
+                            <div v-if="packet.networkLayer.name == 'IPV6'">
+                                <h5>Network layer: {{packet.networkLayer.name}}</h5>
+                                <ul>
+                                    <li>
+                                        <strong>Source IP addr:</strong> {{packet.networkLayer.srcIp}}
+                                    </li>
+                                    <li>
+                                        <strong>Destination IP addr:</strong> {{packet.networkLayer.destIp}}
+                                    </li>
+                                    <li>
+                                        <strong>Protocol (next header):</strong> {{packet.networkLayer.nextHeader.id}} ({{packet.networkLayer.nextHeader.name}})
                                     </li>
                                 </ul>
                             </div>

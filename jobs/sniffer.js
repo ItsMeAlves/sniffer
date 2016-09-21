@@ -24,8 +24,9 @@ module.exports = {
                 networkLayer.protocol);
 
             var ret = decoders.Ethernet(buffer);
-            ret = decoders.IPV4(buffer, ret.offset);
-            console.log(ret);
+            // ret = decoders.IPV6(buffer, ret.offset);
+            // if(networkLayer.name == "ARP")
+            //     console.log(ret);
 
             listeners.forEach((listener) => {
                 listener({

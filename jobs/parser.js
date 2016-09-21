@@ -1,3 +1,39 @@
+function parseMac(macData) {
+    return macData.join(":");
+}
+
+function parseIp32(ipData) {
+    return ipData.map((x) => {
+        return parseInt(x, 16);
+    }).join(".");
+}
+
+function parseIp128(ipData) {
+    var ip = [];
+
+    for(var i = 0; i < 8; i++) {
+        ip[i] = ipData[i * 2] + ipData[i * 2 + 1];
+    }
+
+    return ip.join(":");
+}
+
+function translateTypeField(id) {
+    switch(id) {
+        case "0800":
+            return "IPV4";
+            break;
+        case "0806":
+            return "ARP";
+            break;
+        case "86DD":
+            return "IPV6";
+        break;
+        default:
+            return "UNKNOWN";
+    }
+}
+
 function translateProtocolField(id) {
     switch(id) {
         case "06":
@@ -27,12 +63,8 @@ function ipv4(packetData) {
         name: translateProtocolField(protocolId)
     }
     var checksum = packetData.slice(10, 12).join("");
-    var srcIp = packetData.slice(12, 16).map((x) => {
-        return parseInt(x, 16);
-    }).join(".");
-    var destIp = packetData.slice(16, 20).map(x => {
-        return parseInt(x, 16);
-    }) .join(".");
+    var srcIp = parseIp32(packetData.slice(12, 16));
+    var destIp = parseIp32(packetData.slice(16, 20));
 
     return {
         name,
@@ -51,41 +83,91 @@ function ipv4(packetData) {
 
 function ipv6(packetData) {
     var name = "IPV6";
+    var payloadLength = packetData.slice(4,6);
+    var nextHeaderId = packetData.slice(6,7).map((x) => {
+        return parseInt(x, 16).toString().padLeft("00");
+    }).join("");
+
+    var nextHeader = {
+        id: nextHeaderId,
+        name: translateProtocolField(nextHeaderId)
+    };
+    var hopLimit = packetData.slice(7,8);
+    var srcIpData = packetData.slice(8, 24);
+    var destIpData = packetData.slice(24, 40);
+    var srcIp = parseIp128(srcIpData);
+    var destIp = parseIp128(destIpData);
+
     return {
-        name
+        name,
+        srcIp,
+        destIp,
+        nextHeader
     };
 }
 
+
 function arp(packetData) {
     var name = "ARP";
+    var hardwareAddressLength = parseInt(packetData.slice(4, 5)[0], 16);
+    var protocolAddressLength = parseInt(packetData.slice(5, 6)[0], 16);
+    var opcode = parseInt(packetData.slice(6,8).join(""), 16);
+
+    var begin = 8;
+    var end = 8 + hardwareAddressLength;
+    var senderHardwareAddress = parseMac(packetData.slice(begin, end));
+
+    begin = end;
+    end = begin + protocolAddressLength;
+
+    if(protocolAddressLength == 4) {
+        senderProtocolAddress = parseIp32(packetData.slice(begin, end));
+    }
+    else if(protocolAddressLength == 16) {
+        senderProtocolAddress = parseIp128(packetData.slice(begin, end));
+    }
+
+    begin = end;
+    end = begin + hardwareAddressLength
+
+    var targetHardwareAddress = parseMac(packetData.slice(begin, end))
+    begin = end;
+    end = begin + protocolAddressLength;
+
+    if(protocolAddressLength == 4) {
+        targetProtocolAddress = parseIp32(packetData.slice(begin, end));
+    }
+    else if(protocolAddressLength == 16) {
+        targetProtocolAddress = parseIp128(packetData.slice(begin, end));
+    }
+
     return {
-        name
+        name,
+        opcode: {
+            id: opcode,
+            type: (opcode == 1)? "Request" : "Reply"
+        },
+        senderHardwareAddress,
+        senderProtocolAddress,
+        targetHardwareAddress,
+        targetProtocolAddress
     };
 }
 
 function tcp(packetData) {
-return {};
+    var name = "TCP";
+    return {
+        name
+    };
 }
 
 function udp(packetData) {
-return {};
+    var name = "UDP";
+    return {
+        name
+    };
 }
 
-function translateTypeField(id) {
-    switch(id) {
-        case "0800":
-            return "IPV4";
-            break;
-        case "0806":
-            return "ARP";
-            break;
-        case "86DD":
-            return "IPV6";
-            break;
-        default:
-            return "UNKNOWN";
-    }
-}
 
 module.exports = {
     linkLayer(packetData) {

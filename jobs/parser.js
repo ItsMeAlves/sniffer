@@ -161,15 +161,45 @@ function arp(packetData) {
 
 function tcp(packetData) {
     var name = "TCP";
+    var srcPort = (parseInt(packetData.slice(0,1)[0], 16) * 255) +
+        parseInt(packetData.slice(1,2)[0], 16);
+    var destPort = (parseInt(packetData.slice(2,3)[0], 16) * 255) +
+        parseInt(packetData.slice(3,4)[0], 16);
+    var sequence = packetData.slice(4, 8);
+    var acknowledgement = packetData.slice(8, 12);
+    var hdrResCdBits = packetData.slice(12, 14);
+    var window = packetData.slice(14,16);
+    var checksum = packetData.slice(16,18);
+    var urgent = packetData.slice(18, 20);
+
     return {
-        name
+        name,
+        srcPort,
+        destPort,
+        sequence,
+        acknowledgement,
+        window,
+        checksum,
+        urgent
     };
 }
 
 function udp(packetData) {
     var name = "UDP";
+    var srcPort = (parseInt(packetData.slice(0,1)[0], 16) * 255) +
+        parseInt(packetData.slice(1,2)[0], 16);
+    var destPort = (parseInt(packetData.slice(2,3)[0], 16) * 255) +
+        parseInt(packetData.slice(3,4)[0], 16);
+    var length = (parseInt(packetData.slice(4,5)[0], 16) * 255) +
+        parseInt(packetData.slice(5,6)[0], 16);
+    var checksum = packetData.slice(6,8);
+
     return {
-        name
+        name,
+        srcPort,
+        destPort,
+        length,
+        checksum
     };
 }
 

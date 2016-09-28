@@ -128,6 +128,18 @@
                                     </li>
                                 </ul>
                             </div>
+                            <hr />
+                            <div v-if="packet.networkLayer.name != 'ARP'">
+                                <h5>Transport layer: {{packet.transportLayer.name}}</h5>
+                                <ul>
+                                    <li>
+                                        <strong>Source Port:</strong> {{packet.transportLayer.srcPort}}
+                                    </li>
+                                    <li>
+                                        <strong>Destination Port:</strong> {{packet.transportLayer.destPort}}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

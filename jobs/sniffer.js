@@ -1,7 +1,7 @@
 var Cap = require("cap").Cap;
 var parser = require("./parser");
 var bufferSize = 2 * 1024 * 1024;
-var buffer = new Buffer(3000);
+var buffer = new Buffer(4000);
 var manufacturerApiUrl = "http://api.macvendors.com/";
 var listeners = [];
 
@@ -20,7 +20,7 @@ module.exports = {
             var networkLayer = parser.networkLayer(packetData.slice(14),
                 linkLayer.type);
             var transportLayer = parser.transportLayer(packetData.slice(14 + networkLayer.end),
-                networkLayer.protocol);
+                networkLayer.protocol || networkLayer.nextHeader);
 
             listeners.forEach((listener) => {
                 listener({

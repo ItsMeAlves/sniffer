@@ -65,6 +65,7 @@ function ipv4(packetData) {
     var checksum = packetData.slice(10, 12).join("");
     var srcIp = parseIp32(packetData.slice(12, 16));
     var destIp = parseIp32(packetData.slice(16, 20));
+    var end = 20;
 
     return {
         name,
@@ -77,7 +78,8 @@ function ipv4(packetData) {
         protocol,
         checksum,
         srcIp,
-        destIp
+        destIp,
+        end
     };
 }
 
@@ -97,12 +99,14 @@ function ipv6(packetData) {
     var destIpData = packetData.slice(24, 40);
     var srcIp = parseIp128(srcIpData);
     var destIp = parseIp128(destIpData);
+    var end = 40;
 
     return {
         name,
         srcIp,
         destIp,
-        nextHeader
+        nextHeader,
+        end
     };
 }
 
@@ -150,7 +154,8 @@ function arp(packetData) {
         senderHardwareAddress,
         senderProtocolAddress,
         targetHardwareAddress,
-        targetProtocolAddress
+        targetProtocolAddress,
+        end
     };
 }
 

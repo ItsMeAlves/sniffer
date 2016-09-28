@@ -4,7 +4,7 @@ module.exports = function(messenger, sniffer) {
             var device = data.device || "wlan0";
             var filter = data.filter || "";
             sniffer.start(device, filter);
-        })
+        });
 
         socket.on("stop", (data) => {
             sniffer.stop();
@@ -12,7 +12,7 @@ module.exports = function(messenger, sniffer) {
 
         process.on("exit", () => {
             sniffer.stop();
-        })
+        });
 
         sniffer.subscribe((packet) => {
             socket.emit("packet", packet);

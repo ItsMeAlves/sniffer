@@ -20,13 +20,8 @@ module.exports = {
             var linkLayer = parser.linkLayer(packetData);
             var networkLayer = parser.networkLayer(packetData.slice(14),
                 linkLayer.type);
-            var transportLayer = parser.transportLayer(packetData,
+            var transportLayer = parser.transportLayer(packetData.slice(networkLayer.end),
                 networkLayer.protocol);
-
-            var ret = decoders.Ethernet(buffer);
-            // ret = decoders.IPV6(buffer, ret.offset);
-            // if(networkLayer.name == "ARP")
-            //     console.log(ret);
 
             listeners.forEach((listener) => {
                 listener({

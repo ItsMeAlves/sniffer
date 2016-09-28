@@ -1,5 +1,4 @@
 var Cap = require("cap").Cap;
-var decoders = require("cap").decoders;
 var parser = require("./parser");
 var bufferSize = 2 * 1024 * 1024;
 var buffer = new Buffer(3000);
@@ -20,7 +19,7 @@ module.exports = {
             var linkLayer = parser.linkLayer(packetData);
             var networkLayer = parser.networkLayer(packetData.slice(14),
                 linkLayer.type);
-            var transportLayer = parser.transportLayer(packetData.slice(networkLayer.end),
+            var transportLayer = parser.transportLayer(packetData.slice(14 + networkLayer.end),
                 networkLayer.protocol);
 
             listeners.forEach((listener) => {
